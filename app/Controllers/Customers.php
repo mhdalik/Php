@@ -73,6 +73,19 @@ class Customers extends BaseController
 
     public function store()
     {
+        $rules = [
+            'name'   => 'required|min_length[3]|max_length[255]',
+            'email'  => 'required|valid_email|is_unique[customers.email]',
+            'phone'  => 'permit_empty|max_length[50]',
+            'company' => 'permit_empty|max_length[255]',
+            'city'   => 'permit_empty|max_length[100]',
+            'status' => 'required|in_list[active,inactive,pending]'
+        ];
+
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $data = [
             'name' => $this->request->getPost('name'),
             'email' => $this->request->getPost('email'),
@@ -121,6 +134,19 @@ class Customers extends BaseController
             return redirect()->to('/customers')->with('error', 'Customer not found');
         }
 
+        $rules = [
+            'name'   => 'required|min_length[3]|max_length[255]',
+            'email'  => "required|valid_email|is_unique[customers.email,id,{$id}]",
+            'phone'  => 'permit_empty|max_length[50]',
+            'company'=> 'permit_empty|max_length[255]',
+            'city'   => 'permit_empty|max_length[100]',
+            'status' => 'required|in_list[active,inactive,pending]'
+        ];
+
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $data = [
             'name' => $this->request->getPost('name'),
             'email' => $this->request->getPost('email'),
@@ -131,7 +157,7 @@ class Customers extends BaseController
             'notes' => $this->request->getPost('notes')
         ];
 
-        if ($this->customerModel->update($customer, $data)) {
+        if ($this->customerModel->update($id, $data)) {
             // Log activity
             $this->activityModel->insert([
                 'customer_id' => $id,

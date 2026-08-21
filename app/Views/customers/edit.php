@@ -12,46 +12,56 @@
     </div>
     <div class="card-body">
         <form action="<?= base_url('customers/update/' . $customer['id']) ?>" method="POST">
+            <?php if (session()->has('errors')): ?>
+                <div class="alert alert-danger mb-3">
+                    <ul class="mb-0">
+                        <?php foreach (session('errors') as $error): ?>
+                            <li><?= esc($error) ?></li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+            <?php endif ?>
+
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Name <span class="text-danger">*</span></label>
-                    <input type="text" name="name" class="form-control" value="<?= $customer['name'] ?>" required>
+                    <input type="text" name="name" class="form-control" value="<?= old('name', $customer['name']) ?>" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Email <span class="text-danger">*</span></label>
-                    <input type="email" name="email" class="form-control" value="<?= $customer['email'] ?>" required>
+                    <input type="email" name="email" class="form-control" value="<?= old('email', $customer['email']) ?>" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Phone</label>
-                    <input type="text" name="phone" class="form-control" value="<?= $customer['phone'] ?>">
+                    <input type="text" name="phone" class="form-control" value="<?= old('phone', $customer['phone']) ?>">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Company</label>
-                    <input type="text" name="company" class="form-control" value="<?= $customer['company'] ?>">
+                    <input type="text" name="company" class="form-control" value="<?= old('company', $customer['company']) ?>">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">City</label>
-                    <input type="text" name="city" class="form-control" value="<?= $customer['city'] ?>">
+                    <input type="text" name="city" class="form-control" value="<?= old('city', $customer['city']) ?>">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Status</label>
                     <select name="status" class="form-select">
-                        <option value="active" <?= $customer['status'] == 'active' ? 'selected' : '' ?>>Active</option>
-                        <option value="inactive" <?= $customer['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
-                        <option value="pending" <?= $customer['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                        <option value="active" <?= old('status', $customer['status']) == 'active' ? 'selected' : '' ?>>Active</option>
+                        <option value="inactive" <?= old('status', $customer['status']) == 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                        <option value="pending" <?= old('status', $customer['status']) == 'pending' ? 'selected' : '' ?>>Pending</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Notes</label>
-                <textarea name="notes" class="form-control" rows="4"><?= $customer['notes'] ?></textarea>
+                <textarea name="notes" class="form-control" rows="4"><?= old('notes', $customer['notes']) ?></textarea>
             </div>
 
             <div class="text-end">
