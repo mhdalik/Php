@@ -192,6 +192,17 @@ class Customers extends BaseController
         $output = fopen('php://output', 'w');
 
         fputcsv($output, ['ID', 'Name', 'Email', 'Phone', 'Company', 'City', 'Status']);
+        foreach ($customers as $customer) {
+            fputcsv($output, [
+                $customer['id'],
+                $customer['name'],
+                $customer['email'],
+                $customer['phone'],
+                $customer['company'],
+                $customer['city'],
+                $customer['status']
+            ]);
+        }
 
         fclose($output);
         exit;
