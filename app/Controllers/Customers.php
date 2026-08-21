@@ -16,23 +16,51 @@ class Customers extends BaseController
         $this->customerModel = new CustomerModel();
         $this->activityModel = new ActivityModel();
     }
-
     public function index()
     {
         $search = $this->request->getGet('search');
         $status = $this->request->getGet('status');
         $city = $this->request->getGet('city');
 
-        $builder = $this->customerModel->builder();
+        $model = $this->customerModel;
 
-        $customers = $builder->orderBy('id', 'DESC')->paginate(20);
+        if ($search) {
+            $model->groupStart()
+                ->like('name', $search)
+                ->orLike('email', $search)
+                ->orLike('phone', $search)
+                ->orLike('company', $search)
+                ->groupEnd();
+        }
+        if ($status) $model->where('status', $status);
+        if ($city) $model->where('city', $city);
+
+        $customers = $model->orderBy('id', 'DESC')->paginate(20);
+
+        // Fetch activities for these customers to display in the table
+        if (!empty($customers)) {
+            $customerIds = array_column($customers, 'id');
+            $allActivities = $this->activityModel
+                ->whereIn('customer_id', $customerIds)
+                ->orderBy('created_at', 'DESC')
+                ->findAll();
+
+            $activitiesByCustomer = [];
+            foreach ($allActivities as $activity) {
+                $activitiesByCustomer[$activity['customer_id']][] = $activity;
+            }
+
+            foreach ($customers as &$customer) {
+                $customer['activities'] = $activitiesByCustomer[$customer['id']] ?? [];
+            }
+        }
 
         $data = [
             'customers' => $customers,
-            'pager' => null,
-            'search' => $search,
-            'status' => $status,
-            'city' => $city
+            'pager'     => $model->pager,
+            'search'    => $search,
+            'status'    => $status,
+            'city'      => $city
         ];
 
         return view('customers/index', $data);
