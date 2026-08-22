@@ -123,6 +123,10 @@ class Customers extends BaseController
                 'user_id' => $this->request->user->uid ?? 1
             ]);
 
+            // send welcome email
+            $emailService = new \App\Services\EmailService();
+            $emailService->sendWelcomeEmail($data);
+
             $createdCustomer = $this->customerModel->find($insertedId);
             return $this->respondCreated($createdCustomer);
         }

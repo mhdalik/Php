@@ -105,6 +105,10 @@ class Customers extends BaseController
                 'user_id' => session()->get('user_id')
             ]);
 
+            // send welcome email
+            $emailService = new \App\Services\EmailService();
+            $emailService->sendWelcomeEmail($data);
+
             return redirect()->to('/customers')->with('success', 'Customer created successfully');
         }
 
