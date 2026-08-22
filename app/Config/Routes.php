@@ -27,3 +27,18 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/customers/delete/(:num)', 'Customers::delete/$1');
     $routes->get('/customers/export', 'Customers::export');
 });
+
+// // api routes
+// $routes->group('api', function($routes) {
+//     $routes->get('customers', 'Api\Customers::index');
+//     $routes->get('customers/(:num)', 'Api\Customers::show/$1');
+//     $routes->post('customers', 'Api\Customers::create');
+//     $routes->put('customers/(:num)', 'Api\Customers::update/$1');
+//     $routes->delete('customers/(:num)', 'Api\Customers::delete/$1');
+// });
+$routes->group('api', function ($routes) {
+    $routes->resource('customers', [
+        'controller' => 'Api\Customers',
+        'only' => ['index', 'show', 'create', 'update', 'delete']
+    ]);
+});
