@@ -37,6 +37,7 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
 //     $routes->delete('customers/(:num)', 'Api\Customers::delete/$1');
 // });
 $routes->group('api', function ($routes) {
+    $routes->post('login', 'Api\Auth::login');
     $routes->resource('customers', [
         'controller' => 'Api\Customers',
         'only' => ['index', 'show', 'create', 'update', 'delete']

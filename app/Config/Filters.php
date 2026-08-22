@@ -16,6 +16,7 @@ class Filters extends BaseFilters
         'pagecache'     => \CodeIgniter\Filters\PageCache::class,
         'performance'   => \CodeIgniter\Filters\PerformanceMetrics::class,
         'auth'          => \App\Filters\AuthFilter::class,
+        'jwt'           => \App\Filters\JWTAuthFilter::class,
     ];
 
     public array $globals = [
@@ -33,5 +34,7 @@ class Filters extends BaseFilters
 
     public array $methods = [];
 
-    public array $filters = [];
+    public array $filters = [
+        'jwt' => ['before' => ['api/customers', 'api/customers/*']]
+    ];
 }

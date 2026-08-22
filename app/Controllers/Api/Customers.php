@@ -120,7 +120,7 @@ class Customers extends BaseController
                 'customer_id' => $insertedId,
                 'action' => 'created',
                 'description' => 'Customer created via API',
-                'user_id' => null
+                'user_id' => $this->request->user->uid ?? 1
             ]);
 
             $createdCustomer = $this->customerModel->find($insertedId);
@@ -170,7 +170,7 @@ class Customers extends BaseController
                 'customer_id' => $id,
                 'action' => 'updated',
                 'description' => 'Customer updated via API',
-                'user_id' => null
+                'user_id' => $this->request->user->uid ?? 1
             ]);
 
             $updatedCustomer = $this->customerModel->find($id);
